@@ -1,21 +1,42 @@
-import React, {useState} from "react";
-import {TextField, Button, Container, Typography} from '@mui/material'
+import React, {useState, useEffect } from "react";
+import {TextField, Button, Container, Typography, Snackbar} from '@mui/material'
 import {login} from 'api'
+import { useLocation, useNavigate, useNavigate } from 'react-router-dom'; // Import useLocation
 const Login = () =>{
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
+    const [success, setSuccess] = useState('')
+    const [openSnackbar, setOpenSnackbar] = useState(false)
+    const location = useLocation()
+    const useNavigate = useNavigate()
+    useEffect(() =>{
+        const params = new URLSearchParams(location.search);
+        if(params.get('registered') === 'true'){
+            setSuccess("Đăng ký thành công!")
+            setOpenSnackbar(true)
+        }
+    },[location])
     const handleSubmit = async (e) =>{
         e.preventDefault();
         setError('')
+        setSuccess('')
         try{
             const response = login(username, password);
             localStorage.setItem('token', response.jwt)
+            setSuccess('Login successful!')
+            setOpenSnackbar(true)
+            useNavigate("/")
         }
         catch(error){
-            console.log(error)
-            setError("Có lỗi")
+            setError('Invalid username or password');
+            setOpenSnackbar(true);
         }
+    }
+    const handleSnackbarClose = () =>{
+        setOpenSnackbar(false)
+        setError('')
+        setSuccess('')
     }
     return(
         <Container maxWidth="sm">
@@ -40,6 +61,12 @@ const Login = () =>{
                 {error && <Typography color="error">{error}</Typography>}
                 <Button type="submit" variant="contained" color = "primary">Đăng nhập</Button>
             </form>
+            <Snackbar 
+                open={openSnackbar}
+                autoHideDuration={6000}
+                onClose={handleSnackbarClose}
+                message={error || success}
+            />
         </Container>
     );
 }
