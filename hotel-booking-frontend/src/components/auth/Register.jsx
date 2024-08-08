@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import { TextField, Button, Typography, Container, Snackbar } from "@mui/material";
-import {register} from 'api'
+import { register } from "../../Service/api";
 import {useNavigate} from 'react-router-dom'
 const Register = () => {
     const [username, setUsername] = useState('');
@@ -22,11 +22,11 @@ const Register = () => {
             return
         }
         try{
-            const response = register(username, password)
-            // Chuyển sang đăng ký
-            setTimeout(() =>{
-                navigate('/login?registered=true')
-            }, 2000)
+            const response = register(username, password, email)
+            console.log(response)
+            // setTimeout(() =>{
+            //     navigate('/login?registered=true')
+            // }, 2000)
         }
         catch (error){
             console.log(error)
@@ -40,7 +40,7 @@ const Register = () => {
         setSuccess('')
     }
     return (
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="xs" style={{ marginTop: '100px' }}>
             <Typography variant="h4">Đăng ký</Typography>
             {error && <Typography color={error}> {error} </Typography>}
             {success && <Typography color="primary">{success}</Typography>}

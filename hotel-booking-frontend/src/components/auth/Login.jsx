@@ -1,7 +1,7 @@
 import React, {useState, useEffect } from "react";
 import {TextField, Button, Container, Typography, Snackbar} from '@mui/material'
-import {login} from 'api'
-import { useLocation, useNavigate, useNavigate } from 'react-router-dom'; // Import useLocation
+import { login } from "../../Service/api";
+import { useLocation, useNavigate } from 'react-router-dom'; // Import useLocation
 const Login = () =>{
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -9,7 +9,7 @@ const Login = () =>{
     const [success, setSuccess] = useState('')
     const [openSnackbar, setOpenSnackbar] = useState(false)
     const location = useLocation()
-    const useNavigate = useNavigate()
+    const navigate = useNavigate();
     useEffect(() =>{
         const params = new URLSearchParams(location.search);
         if(params.get('registered') === 'true'){
@@ -22,11 +22,11 @@ const Login = () =>{
         setError('')
         setSuccess('')
         try{
-            const response = login(username, password);
+            const response = await login(username, password);
             localStorage.setItem('token', response.jwt)
             setSuccess('Login successful!')
             setOpenSnackbar(true)
-            useNavigate("/")
+            window.location.href = '/'
         }
         catch(error){
             setError('Invalid username or password');
@@ -39,7 +39,7 @@ const Login = () =>{
         setSuccess('')
     }
     return(
-        <Container maxWidth="sm">
+        <Container maxWidth="sm" style={{ marginTop: '100px' }}>
             <Typography variant="h4">Đăng nhập</Typography>
             <form onSubmit={handleSubmit}>
                 <TextField label = "Tên đăng nhập "

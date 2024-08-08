@@ -6,7 +6,7 @@ const Navbar = () =>{
         localStorage.removeItem('token')
         window.location.href = '/login'
     }
-    const isAuthenticated = !localStorage.getItem('token')
+    const isAuthenticated = localStorage.getItem('token')
     return (
         <AppBar position='static'>
             <Toolbar>
